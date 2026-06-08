@@ -95,7 +95,10 @@ def cuda_time_ms(
     try:
         schedule = torch.profiler.schedule(wait=0, warmup=1, active=1, repeat=trials)
         with torch.profiler.profile(
-            activities=[torch.profiler.ProfilerActivity.CUDA],
+            activities=[
+                torch.profiler.ProfilerActivity.CPU,
+                torch.profiler.ProfilerActivity.CUDA,
+            ],
             schedule=schedule,
             on_trace_ready=on_trace_ready,
             acc_events=True,
@@ -109,7 +112,7 @@ def cuda_time_ms(
                     run_once.iteration += 1  # type: ignore[attr-defined]
                     run_once()
                 prof.step()
-    except (AttributeError, RuntimeError):
+    except (AssertionError, AttributeError, RuntimeError):
         pass
 
     if trial_means and not any(total_ms > 0 for total_ms in trial_means):

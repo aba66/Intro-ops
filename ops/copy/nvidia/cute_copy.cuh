@@ -13,38 +13,37 @@ __global__ void copy_contiguous_cute_l40_kernel(T *dst, const T *src, int64_t n)
 
     constexpr int elements_per_block = Threads * ElementsPerAccess;
 
-    Tensor src_tensor = make_tensor(make_gmem_ptr(src), make_layout(make_shape(n)));
-    Tensor dst_tensor = make_tensor(make_gmem_ptr(dst), make_layout(make_shape(n)));
+    auto src_tensor = make_tensor(make_gmem_ptr(src), make_layout(make_shape(n)));
+    auto dst_tensor = make_tensor(make_gmem_ptr(dst), make_layout(make_shape(n)));
 
     auto block_shape = make_shape(Int<elements_per_block>{});
     auto block_coord = make_coord(blockIdx.x);
 
-    Tensor coords = make_identity_tensor(shape(src_tensor));
-    Tensor predicates = cute::lazy::transform(coords, [&](auto coord) {
-        return elem_less(coord, shape(src_tensor));
-    });
+    auto coords = make_identity_tensor(shape(src_tensor));
+    auto src_tile = local_tile(src_tensor, block_shape, block_coord);
+    auto dst_tile = local_tile(dst_tensor, block_shape, block_coord);
+    auto coord_tile = local_tile(coords, block_shape, block_coord);
 
-    Tensor src_tile = local_tile(src_tensor, block_shape, block_coord);
-    Tensor dst_tile = local_tile(dst_tensor, block_shape, block_coord);
-    Tensor pred_tile = local_tile(predicates, block_shape, block_coord);
-
-    Layout thread_layout = make_layout(make_shape(Int<Threads>{}));
-    Layout value_layout = make_layout(make_shape(Int<ElementsPerAccess>{}));
+    auto thread_layout = make_layout(make_shape(Int<Threads>{}));
+    auto value_layout = make_layout(make_shape(Int<ElementsPerAccess>{}));
 
     using AccessType = uint_byte_t<sizeof(T) * ElementsPerAccess>;
     using CopyOp = UniversalCopy<AccessType>;
     using Atom = Copy_Atom<CopyOp, T>;
 
-    TiledCopy tiled_copy = make_tiled_copy(Atom{}, thread_layout, value_layout);
-    ThrCopy thread_copy = tiled_copy.get_thread_slice(threadIdx.x);
+    auto tiled_copy = make_tiled_copy(Atom{}, thread_layout, value_layout);
+    auto thread_copy = tiled_copy.get_thread_slice(threadIdx.x);
 
-    Tensor thread_src = thread_copy.partition_S(src_tile);
-    Tensor thread_dst = thread_copy.partition_D(dst_tile);
-    Tensor thread_pred = thread_copy.partition_S(pred_tile);
-    Tensor fragment = make_fragment_like(thread_src);
+    auto thread_src = thread_copy.partition_S(src_tile);
+    auto thread_dst = thread_copy.partition_D(dst_tile);
+    auto thread_coord = thread_copy.partition_S(coord_tile);
 
-    copy_if(tiled_copy, thread_pred, thread_src, fragment);
-    copy_if(tiled_copy, thread_pred, fragment, thread_dst);
+    CUTE_UNROLL
+    for (int i = 0; i < size(thread_dst); ++i) {
+        if (elem_less(thread_coord(i), shape(src_tensor))) {
+            thread_dst(i) = thread_src(i);
+        }
+    }
 }
 
 template <typename T>

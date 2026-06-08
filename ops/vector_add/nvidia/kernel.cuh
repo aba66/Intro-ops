@@ -7,14 +7,12 @@ namespace oprt::vector_add::nvidia {
 
 template <typename T>
 __device__ T add_values(T a, T b) {
-    // TODO: return the elementwise sum for generic types.
-    return T{};
+    return a + b;
 }
 
 template <>
 __device__ inline half add_values<half>(half a, half b) {
-    // TODO: return the half-precision elementwise sum.
-    return half{};
+    return __hadd(a, b);
 }
 
 template <typename T>
@@ -22,13 +20,11 @@ __global__ void vector_add_contiguous_kernel(T * __restrict__ out,
                                              const T * __restrict__ a,
                                              const T * __restrict__ b,
                                              int64_t n) {
-    // TODO: implement a grid-stride loop vector add kernel.
-    //
-    // Suggested steps:
-    // 1. Compute the global thread index.
-    // 2. Compute the grid-wide stride.
-    // 3. Loop over i = idx; i < n; i += stride.
-    // 4. Write out[i] = add_values(a[i], b[i]).
+    int64_t idx = static_cast<int64_t>(blockIdx.x) * blockDim.x + threadIdx.x;
+    int64_t stride = static_cast<int64_t>(blockDim.x) * gridDim.x;
+    for (int64_t i = idx; i < n; i += stride) {
+        out[i] = add_values(a[i], b[i]);
+    }
 }
 
 } // namespace oprt::vector_add::nvidia
