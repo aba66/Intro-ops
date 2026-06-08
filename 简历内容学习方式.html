@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>简历内容学习方式</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --paper: #ffffff;
+      --ink: #17202a;
+      --muted: #5c6672;
+      --line: #d9dee5;
+      --accent: #0f766e;
+      --accent-soft: #e4f3f1;
+      --code: #eef2f7;
+      --warn: #8a5a00;
+      --warn-bg: #fff4d8;
+      --good: #1f7a3f;
+      --good-bg: #e9f7ee;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.65;
+    }
+
+    header {
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 28px 20px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.28;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin: 34px 0 14px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+    }
+
+    h3 {
+      font-size: 18px;
+      margin: 20px 0 8px;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .lead {
+      max-width: 880px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .toc {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .toc a {
+      display: block;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfd;
+      color: var(--ink);
+    }
+
+    main.wrap {
+      padding-top: 18px;
+    }
+
+    .note {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      background: var(--paper);
+      margin: 16px 0;
+    }
+
+    .warning {
+      border-left-color: var(--warn);
+      background: var(--warn-bg);
+    }
+
+    .done {
+      border-left-color: var(--good);
+      background: var(--good-bg);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+    }
+
+    .tag {
+      display: inline-block;
+      margin: 0 6px 6px 0;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #07544e;
+      font-size: 13px;
+    }
+
+    ul,
+    ol {
+      padding-left: 22px;
+      margin: 8px 0;
+    }
+
+    li {
+      margin: 5px 0;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: var(--code);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #eef2f6;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .flow {
+      counter-reset: step;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .step {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 130px;
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      margin-bottom: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+    }
+
+    .checklist li {
+      list-style: none;
+      position: relative;
+      margin-left: 2px;
+    }
+
+    .checklist li::before {
+      content: "□";
+      position: absolute;
+      left: -22px;
+      color: var(--accent);
+    }
+
+    footer {
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      margin-top: 34px;
+      padding-top: 18px;
+      font-size: 14px;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .toc {
+        display: none;
+      }
+
+      .card,
+      .note,
+      table,
+      .step {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>简历内容学习方式</h1>
+      <p class="lead">
+        目标不是把“C ABI、CUDA、CUTLASS、benchmark”背成关键词，而是能把这个项目从 Python 调用一路讲到底层 kernel，
+        能解释为什么这么设计、怎么验证正确性、性能瓶颈在哪里、下一步怎么优化。
+      </p>
+      <nav class="toc" aria-label="页面目录">
+        <a href="#principle">学习总原则</a>
+        <a href="#roadmap">阶段路线</a>
+        <a href="#knowledge">知识点学习法</a>
+        <a href="#operator-flow">新增算子流程</a>
+        <a href="#interview">面试讲述模板</a>
+        <a href="#checks">自测清单</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="principle">
+      <h2>学习总原则</h2>
+      <div class="note">
+        <strong>每个简历知识点都按四步学习：</strong>
+        读代码定位入口，亲手改一个小点，跑测试和 benchmark 验证，用自己的话讲 3 分钟。
+        讲不清的内容不要急着写进简历。
+      </div>
+
+      <div class="flow">
+        <div class="step">
+          <h3>读链路</h3>
+          <p>从 Python API 开始，顺着 ctypes、C ABI、descriptor、CUDA kernel 往下追，画出一次算子调用的数据流。</p>
+        </div>
+        <div class="step">
+          <h3>改代码</h3>
+          <p>不要只看。改一个边界检查、一个 dtype 分支、一个 kernel loop，再观察测试如何变化。</p>
+        </div>
+        <div class="step">
+          <h3>做验证</h3>
+          <p>每次修改都跑 correctness、API contract、benchmark，并记录输入规模、latency、speedup 和误差范围。</p>
+        </div>
+        <div class="step">
+          <h3>讲出来</h3>
+          <p>用“背景、设计、实现、验证、问题、优化”六句话复述。能讲给别人听，才算掌握。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="roadmap">
+      <h2>阶段路线</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>阶段</th>
+            <th>目标</th>
+            <th>具体动作</th>
+            <th>产出</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>第 0 阶段：跑通环境</td>
+            <td>知道项目如何构建、测试、加载动态库。</td>
+            <td>执行 <code>bash scripts/build_nvidia.sh build</code> 和 <code>bash scripts/build_nvidia.sh test</code>，记录 CUDA、CMake、CUTLASS、PyTorch 版本。</td>
+            <td>一份环境记录；能解释构建目录、动态库路径、PYTHONPATH、CAMP_BUILD_DIR。</td>
+          </tr>
+          <tr>
+            <td>第 1 阶段：读懂运行时</td>
+            <td>理解 Python 到 CUDA kernel 的完整调用链。</td>
+            <td>以 <code>vector_add</code> 为例，从 <code>python/operator_runtime/ops/vector_add.py</code> 追到 <code>ops/vector_add/nvidia/vector_add_cuda.cu</code>。</td>
+            <td>一张调用链图；能讲 descriptor、TensorView、execute 参数顺序。</td>
+          </tr>
+          <tr>
+            <td>第 2 阶段：完成 TODO 算子</td>
+            <td>掌握 elementwise、reduction、softmax 三类基础 kernel。</td>
+            <td>实现 <code>vector_add</code>、<code>reduce_sum</code>、<code>softmax</code>，并补充或修改测试用例验证边界。</td>
+            <td>全部 correctness tests 通过；能解释 grid-stride loop、shared memory reduction、数值稳定 softmax。</td>
+          </tr>
+          <tr>
+            <td>第 3 阶段：性能分析</td>
+            <td>知道性能数据怎么来，瓶颈怎么判断。</td>
+            <td>跑 benchmark，对比 PyTorch baseline，记录不同 shape/dtype 下的 latency 和 speedup。</td>
+            <td>一张性能表；能说明 bandwidth bound、launch overhead、访存合并、shared memory 使用。</td>
+          </tr>
+          <tr>
+            <td>第 4 阶段：新增 LLM 相关算子</td>
+            <td>把项目从“基础练习”升级成“岗位相关项目”。</td>
+            <td>优先新增 RMSNorm、LayerNorm、RoPE、GEMV、Quantize/Dequantize 中的 1 到 2 个。</td>
+            <td>新增算子的 C ABI、Python API、tests、bench、examples；简历上有更贴近推理部署的亮点。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="knowledge">
+      <h2>知识点学习法</h2>
+
+      <div class="grid">
+        <article class="card">
+          <h3>1. C ABI 与 descriptor 生命周期</h3>
+          <span class="tag">AI Infra</span>
+          <span class="tag">端侧部署</span>
+          <p><strong>学什么：</strong>为什么底层接口用 C ABI，descriptor 为什么要 create/execute/destroy，workspace 为什么单独查询。</p>
+          <p><strong>看哪里：</strong><code>include/operator_runtime/ops/*.h</code>、<code>include/operator_runtime/descriptor.h</code>、各 <code>*_cuda.cu</code>。</p>
+          <p><strong>怎么练：</strong>在 create/execute/destroy 里加日志或断点，跑一个算子，观察生命周期调用顺序。</p>
+          <p><strong>面试怎么讲：</strong>C ABI 让 Python、C++ 或其他 runtime 都能稳定调用同一套动态库接口，descriptor 把 shape/dtype/axis 等编译外参数缓存下来，execute 只处理运行时指针和 stream。</p>
+        </article>
+
+        <article class="card">
+          <h3>2. TensorView 与内存布局</h3>
+          <span class="tag">Tensor 元信息</span>
+          <span class="tag">contiguous</span>
+          <p><strong>学什么：</strong>data pointer、dtype、ndim、shape、stride 的含义，以及为什么很多 kernel 先限制 contiguous。</p>
+          <p><strong>看哪里：</strong><code>python/operator_runtime/_internal/tensor_view.py</code>、<code>include/operator_runtime/api.h</code>、<code>include/operator_runtime/detail/tensor_checks.h</code>。</p>
+          <p><strong>怎么练：</strong>构造 transpose tensor、broadcast tensor、wrong dtype tensor，观察 API contract test 为什么报错。</p>
+          <p><strong>面试怎么讲：</strong>TensorView 是上层框架张量和底层 runtime 之间的契约；contiguous fast path 可以把多维张量线性化，简化 kernel 并保证访存连续。</p>
+        </article>
+
+        <article class="card">
+          <h3>3. Python binding 与动态库加载</h3>
+          <span class="tag">ctypes</span>
+          <span class="tag">runtime</span>
+          <p><strong>学什么：</strong>Python 如何加载 <code>libcamp_ops.so</code>，如何声明 C 函数 argtypes/restype，如何传入 CUDA tensor 指针。</p>
+          <p><strong>看哪里：</strong><code>python/operator_runtime/_internal/loader.py</code>、<code>bindings.py</code>、<code>prepared.py</code>。</p>
+          <p><strong>怎么练：</strong>故意改错一个 argtypes 顺序，观察输出错误或 crash，再恢复并说明为什么参数顺序必须严格一致。</p>
+          <p><strong>面试怎么讲：</strong>Python 层不拷贝数据，只把 tensor.data_ptr 和当前 CUDA stream 传给 C ABI，底层 kernel 在同一 stream 上执行。</p>
+        </article>
+
+        <article class="card">
+          <h3>4. CUDA elementwise kernel</h3>
+          <span class="tag">grid-stride loop</span>
+          <span class="tag">FP16</span>
+          <p><strong>学什么：</strong>thread/block/grid 映射，grid-stride loop，FP32 与 half 的计算差异。</p>
+          <p><strong>看哪里：</strong><code>ops/vector_add/nvidia/kernel.cuh</code>、<code>ops/elementwise/relu/nvidia/relu_cuda.cu</code>。</p>
+          <p><strong>怎么练：</strong>实现 <code>out[i] = a[i] + b[i]</code>，再支持 half，比较不同 shape 下 PyTorch 和自定义 kernel 的耗时。</p>
+          <p><strong>面试怎么讲：</strong>grid-stride loop 可以让 kernel 适配任意长度输入，线程数不需要等于元素数，适合通用 elementwise 算子。</p>
+        </article>
+
+        <article class="card">
+          <h3>5. Reduction 与 Softmax</h3>
+          <span class="tag">shared memory</span>
+          <span class="tag">数值稳定</span>
+          <p><strong>学什么：</strong>一行一个 block 的 reduction，shared memory 树形规约，softmax 为什么要先减 row max。</p>
+          <p><strong>看哪里：</strong><code>ops/reduce_sum/nvidia/kernel.cuh</code>、<code>ops/softmax/nvidia/kernel.cuh</code>。</p>
+          <p><strong>怎么练：</strong>先实现 cols 不超过 blockDim 的版本，再扩展成 <code>col += blockDim.x</code> 的循环版本。</p>
+          <p><strong>面试怎么讲：</strong>reduce_sum 是典型 bandwidth-bound kernel；softmax 需要 max reduce、exp/sum reduce、normalize 三步，减 max 是为了避免 exp overflow。</p>
+        </article>
+
+        <article class="card">
+          <h3>6. CUTLASS/CuTe 与向量化 copy</h3>
+          <span class="tag">CUTLASS</span>
+          <span class="tag">CuTe</span>
+          <p><strong>学什么：</strong>CuTe tensor/layout/tile/partition 的概念，以及为什么向量化访存需要对齐和尾部 predicate。</p>
+          <p><strong>看哪里：</strong><code>ops/copy/nvidia/cute_copy.cuh</code>、<code>third_party/cutlass/examples/cute/tutorial/tiled_copy.cu</code>。</p>
+          <p><strong>怎么练：</strong>对比普通 copy kernel 与 CuTe copy kernel 的输入对齐判断、tile 切分和边界判断。</p>
+          <p><strong>面试怎么讲：</strong>CuTe 用 layout 组合表达线程到数据的映射；向量化 copy 提升单次访存宽度，但必须保证指针对齐，尾部元素通过坐标 predicate 避免越界。</p>
+        </article>
+
+        <article class="card">
+          <h3>7. 构建系统与环境复现</h3>
+          <span class="tag">CMake</span>
+          <span class="tag">Conda</span>
+          <span class="tag">CUDA</span>
+          <p><strong>学什么：</strong>CMake 如何启用 CUDA 语言，如何找到 CUTLASS，Python 如何找到构建产物。</p>
+          <p><strong>看哪里：</strong><code>CMakeLists.txt</code>、<code>ops/CMakeLists.txt</code>、<code>scripts/build_nvidia.sh</code>。</p>
+          <p><strong>怎么练：</strong>清理 <code>build-nvidia</code> 后重新构建；尝试 <code>CAMP_ENABLE_CUTE=OFF</code> 和默认模式的差异。</p>
+          <p><strong>面试怎么讲：</strong>AI Infra 项目不仅要会写 kernel，还要保证别人能稳定构建、加载和验证。构建脚本是工程可复现性的入口。</p>
+        </article>
+
+        <article class="card">
+          <h3>8. 测试与 Benchmark</h3>
+          <span class="tag">pytest</span>
+          <span class="tag">profiling</span>
+          <p><strong>学什么：</strong>correctness、API contract、benchmark 分别验证什么；为什么 benchmark 不能只看一次运行时间。</p>
+          <p><strong>看哪里：</strong><code>tests/op_tests</code>、<code>tests/bench</code>、<code>python/operator_runtime_testing/benchmark.py</code>。</p>
+          <p><strong>怎么练：</strong>新增一个 shape case，跑测试和 bench；记录 PyTorch baseline 与自定义算子的速度差异。</p>
+          <p><strong>面试怎么讲：</strong>正确性测试保证输出和 PyTorch 对齐，API contract 保证错误输入能被拒绝，benchmark 用多个规模和 trial 观察性能趋势。</p>
+        </article>
+
+        <article class="card">
+          <h3>9. 端侧部署视角</h3>
+          <span class="tag">低依赖</span>
+          <span class="tag">稳定 ABI</span>
+          <p><strong>学什么：</strong>端侧部署为什么重视动态库大小、低依赖、稳定接口、fallback、设备能力探测和量化。</p>
+          <p><strong>看哪里：</strong>从当前 C ABI 和动态库加载机制出发，思考如果脱离 PyTorch，runtime 还缺什么。</p>
+          <p><strong>怎么练：</strong>写一份“端侧部署改造计划”：支持 FP16/INT8、设备能力检查、算子 fallback、模型子图手工下沉。</p>
+          <p><strong>面试怎么讲：</strong>这个项目虽然小，但已经具备部署 runtime 的核心形态：稳定 ABI、低层动态库、显式内存和 stream 管理、算子级验证。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="operator-flow">
+      <h2>新增算子的标准流程</h2>
+      <div class="note done">
+        最适合作为下一步新增的算子：<strong>RMSNorm</strong>、<strong>LayerNorm</strong>、<strong>RoPE</strong>、<strong>GEMV</strong>、<strong>Quantize/Dequantize</strong>。先做 RMSNorm 或 RoPE，最贴近大模型推理，也容易讲清楚。
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>步骤</th>
+            <th>要做什么</th>
+            <th>你要能讲清楚什么</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1. 定义接口</td>
+            <td>新增 <code>include/operator_runtime/ops/&lt;op&gt;.h</code>，确定 create/execute 参数和 workspace 需求。</td>
+            <td>为什么这些参数属于 descriptor，哪些参数应该每次 execute 传入。</td>
+          </tr>
+          <tr>
+            <td>2. Python API</td>
+            <td>新增 <code>python/operator_runtime/ops/&lt;op&gt;.py</code>，完成输入检查、TensorView 构造、binding。</td>
+            <td>如何把 PyTorch Tensor 转成 C ABI 能理解的信息。</td>
+          </tr>
+          <tr>
+            <td>3. C++ descriptor</td>
+            <td>在 <code>ops/&lt;op&gt;/nvidia/&lt;op&gt;_cuda.cu</code> 中保存 shape、dtype、axis、epsilon 等元信息。</td>
+            <td>descriptor 如何避免每次执行重复做参数推导。</td>
+          </tr>
+          <tr>
+            <td>4. CUDA kernel</td>
+            <td>先写 naive 正确版本，再考虑 shared memory、vectorized load、warp-level reduction 等优化。</td>
+            <td>线程如何映射到数据，访存是否连续，瓶颈是算力还是带宽。</td>
+          </tr>
+          <tr>
+            <td>5. 测试</td>
+            <td>新增 correctness cases、API error cases、边界 shape、dtype case。</td>
+            <td>如何证明结果对，如何证明错误输入被正确拒绝。</td>
+          </tr>
+          <tr>
+            <td>6. Benchmark</td>
+            <td>新增 benchmark cases，对比 PyTorch baseline，记录 latency、speedup、误差。</td>
+            <td>性能是否稳定，为什么某些 shape 快或慢。</td>
+          </tr>
+          <tr>
+            <td>7. 面试复盘</td>
+            <td>写一页复盘：设计取舍、踩坑、验证、性能结果、下一步优化。</td>
+            <td>能从工程和性能两个角度讲，而不是只说“我实现了一个算子”。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="interview">
+      <h2>面试讲述模板</h2>
+
+      <h3>30 秒版本</h3>
+      <div class="note">
+        我做了一个轻量级 GPU 算子运行时，目标是把 Python API、C ABI、CUDA kernel、测试和 benchmark 串起来。项目里我实现了 copy、vector_add、reduce_sum、softmax、relu 等基础算子，理解了 TensorView、descriptor、workspace、CUDA stream 等运行时抽象，也用 pytest 和 benchmark 对齐 PyTorch 做了正确性和性能验证。后续我会继续补 RMSNorm、RoPE、量化相关算子，让项目更贴近 LLM 推理部署。
+      </div>
+
+      <h3>2 分钟版本</h3>
+      <div class="note">
+        这个项目我把它当作 AI Infra 算子开发链路来学。上层是 Python API，负责做输入检查、构造 TensorView，并通过 ctypes 调用动态库；中间是 C ABI，统一管理 descriptor 创建、workspace 查询、execute 和 destroy；底层是 NVIDIA CUDA kernel。比如 vector_add 是 grid-stride loop，reduce_sum 是一行一个 block 的 shared memory 规约，softmax 做了 max reduce、exp/sum reduce 和 normalize，保证数值稳定。项目也集成了 CUTLASS/CuTe copy，我处理过 CuTe API 版本兼容和尾部边界判断。验证方面，我跑了 pytest correctness 和 API contract，并用 benchmark 对比 PyTorch baseline。这个项目让我理解了一个算子从框架层到 kernel 层的完整路径，而不是只会写孤立的 CUDA 函数。
+      </div>
+
+      <h3>可展开的真实问题</h3>
+      <ul>
+        <li><strong>CuTe 兼容问题：</strong>构建时发现旧写法依赖不存在的 <code>cute::lazy::transform</code>，我对照 CUTLASS v3.7 示例改成 identity tensor 加坐标 predicate，解决了边界判断和模板类型推导问题。</li>
+        <li><strong>空 kernel 问题：</strong>测试中 copy/relu 通过，但 vector_add/reduce_sum/softmax 输出错误。继续追到底层发现 kernel 仍是 TODO，于是分别实现 grid-stride loop、shared memory reduction 和数值稳定 softmax。</li>
+        <li><strong>benchmark 兼容问题：</strong>当前 PyTorch profiler 要求同时启用 CPU activity，否则 CUDA profiling 报错。我调整 profiler activities，并保留 CUDA event 兜底计时，保证 benchmark 能跑完。</li>
+      </ul>
+
+      <h3>面试官追问时的回答方向</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>追问</th>
+            <th>回答重点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>为什么要用 C ABI？</td>
+            <td>语言边界稳定，Python/C++/其他 runtime 都能调用；动态库接口清晰，适合部署和多后端适配。</td>
+          </tr>
+          <tr>
+            <td>descriptor 里放什么？</td>
+            <td>放 shape、dtype、axis、elements、workspace_size 等元信息；execute 只传 runtime 指针和 stream。</td>
+          </tr>
+          <tr>
+            <td>softmax 为什么要减 max？</td>
+            <td>避免 exp overflow，保持数值稳定；流程是 row max、exp 和 sum、normalize。</td>
+          </tr>
+          <tr>
+            <td>benchmark 为什么有时比 PyTorch 慢？</td>
+            <td>小 shape 可能被 launch overhead 主导；大 shape 受内存带宽、访存模式和优化程度影响。自定义 naive kernel 不一定赢，但能帮助定位瓶颈。</td>
+          </tr>
+          <tr>
+            <td>端侧部署还缺什么？</td>
+            <td>量化、fallback、设备能力探测、算子覆盖率、模型图接入、低依赖打包、内存复用和更稳定的 ABI 版本管理。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="checks">
+      <h2>自测清单</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>运行时链路</h3>
+          <ul class="checklist">
+            <li>能从 <code>operator_runtime.vector_add</code> 讲到 CUDA kernel launch。</li>
+            <li>能解释 TensorView 的每个字段。</li>
+            <li>能解释 create、workspace、execute、destroy 的职责边界。</li>
+            <li>能说明 stream 是怎么从 PyTorch 传到底层的。</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>CUDA Kernel</h3>
+          <ul class="checklist">
+            <li>能手写 grid-stride loop。</li>
+            <li>能手写一行一个 block 的 reduce_sum。</li>
+            <li>能讲 softmax 的三阶段规约。</li>
+            <li>能解释 FP16 和 FP32 在实现和误差上的差异。</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>工程验证</h3>
+          <ul class="checklist">
+            <li>能清理构建目录并重新构建 NVIDIA 后端。</li>
+            <li>能新增一个 correctness case 和 API error case。</li>
+            <li>能新增一个 benchmark case 并解释结果。</li>
+            <li>能定位动态库加载路径错误。</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>简历表达</h3>
+          <ul class="checklist">
+            <li>每个 bullet 都能讲出对应代码文件。</li>
+            <li>每个性能结论都有数据来源。</li>
+            <li>每个“优化”都能讲清楚优化前后差异。</li>
+            <li>能说出下一步要新增哪个算子，以及为什么它贴近岗位。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note warning">
+        <strong>简历红线：</strong>
+        不要写“精通 CUTLASS、精通深度学习框架内核”这种空话。更好的写法是：
+        “集成 CUTLASS/CuTe 实现向量化 copy，并处理对齐访问、尾部边界和版本兼容问题。”
+        面试官要的是你做过什么、怎么做、怎么验证、踩过什么坑。
+      </div>
+    </section>
+
+    <footer>
+      <p>建议每完成一个新增算子，就把本页面对应知识点更新一次：补代码路径、测试结果、benchmark 表格和面试讲述版本。</p>
+    </footer>
+  </main>
+</body>
+</html>

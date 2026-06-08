@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>端侧部署简历项目经历</title>
+  <style>
+    :root {
+      --bg: #f5f7f8;
+      --paper: #ffffff;
+      --ink: #18242f;
+      --muted: #5d6875;
+      --line: #d9e0e7;
+      --accent: #0f766e;
+      --soft: #e4f3f1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.62;
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 34px 20px 46px;
+    }
+
+    .sheet {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 30px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.25;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 26px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h3 {
+      font-size: 17px;
+      margin: 18px 0 8px;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+
+    ul {
+      margin: 8px 0;
+      padding-left: 22px;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    .meta {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 18px;
+    }
+
+    .tag {
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: #07544e;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .highlight {
+      padding: 14px 16px;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      background: #f8fbfb;
+      margin: 12px 0;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: #edf2f6;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      main {
+        padding: 0;
+      }
+
+      .sheet {
+        border: 0;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <article class="sheet">
+      <h1>端侧部署方向简历项目经历</h1>
+      <p class="meta">建议按实际完成内容删改，只保留自己能复现、能解释性能结果、能讲清楚取舍的部分。</p>
+
+      <div class="tag-row">
+        <span class="tag">C++/CUDA</span>
+        <span class="tag">Python ctypes</span>
+        <span class="tag">C ABI</span>
+        <span class="tag">GPU Operator Runtime</span>
+        <span class="tag">端侧推理部署</span>
+        <span class="tag">CUTLASS/CuTe</span>
+      </div>
+
+      <h2>项目名称</h2>
+      <p><strong>轻量级 GPU 算子运行时与端侧推理算子开发</strong></p>
+
+      <h2>项目描述</h2>
+      <p>
+        基于 C++/CUDA/Python 构建一个面向模型推理部署的轻量级 GPU 算子运行时，支持通过 Python API 调用底层 C ABI，并实现
+        copy、vector_add、reduce_sum、softmax、relu 等基础算子。项目覆盖算子 descriptor 生命周期、Tensor 元信息抽象、CUDA stream
+        传递、动态库加载、正确性测试和 benchmark，对齐端侧部署中低依赖、稳定 ABI、算子级性能优化和端到端调用开销控制等需求。
+      </p>
+
+      <h2>简历 Bullet</h2>
+      <ul>
+        <li>实现面向推理部署的轻量级 GPU Operator Runtime，采用 C ABI 封装算子创建、workspace 查询、执行和销毁流程，支持 Python 层通过 <code>ctypes</code> 调用底层 CUDA 动态库。</li>
+        <li>设计 TensorView 抽象，封装 dtype、shape、stride、data pointer 等张量元信息，支持上层 PyTorch Tensor 与底层自定义 CUDA kernel 之间的数据传递。</li>
+        <li>实现 NVIDIA 后端基础算子，包括 copy、vector_add、reduce_sum、softmax、relu，覆盖 FP32/FP16、contiguous tensor、row-wise reduction 等典型推理计算场景。</li>
+        <li>使用 CUDA grid-stride loop、shared memory reduction、numerically stable softmax 等方式实现基础 kernel，并与 PyTorch baseline 进行正确性和性能对比。</li>
+        <li>集成 CUTLASS/CuTe，实现向量化 copy kernel，处理对齐访问、尾部边界判断以及 CUDA/CUTLASS 版本兼容问题。</li>
+        <li>搭建 CMake/Ninja/Conda 构建与验证流程，完成 NVIDIA 后端编译、动态库加载、pytest 正确性测试、benchmark 和 examples 端到端验证。</li>
+        <li>熟悉模型端侧部署中的算子执行链路，包括低开销 ABI 调用、CUDA stream 管理、workspace 管理、动态库加载、内存布局检查和算子级性能分析。</li>
+      </ul>
+
+      <h2>端侧部署强调版</h2>
+      <div class="highlight">
+        轻量级 GPU 算子运行时与端侧推理算子开发：基于 C++/CUDA/Python 实现面向推理部署的算子执行框架，通过 C ABI
+        封装算子生命周期并提供 Python 调用入口；实现 copy、vector_add、reduce_sum、softmax、relu 等基础 CUDA 算子，覆盖
+        FP32/FP16、contiguous tensor 和 row-wise reduction 场景；使用 shared memory reduction、数值稳定 softmax、CUTLASS/CuTe
+        向量化 copy 等方式优化 kernel，并通过 pytest、benchmark 和 examples 完成端到端验证。
+      </div>
+
+      <h2>后续新增算子后可增强</h2>
+      <ul>
+        <li>新增 RMSNorm、LayerNorm、RoPE、TopK、GEMV 或 Quantize/Dequantize 等更贴近 LLM 推理的算子，并补充 correctness test 和 benchmark。</li>
+        <li>加入 FP16/INT8 混合精度路径，对比 PyTorch 或 TensorRT 相关算子的性能和误差。</li>
+        <li>记录不同输入规模下的 latency、bandwidth、speedup，用具体数据增强简历可信度。</li>
+        <li>如果做端侧平台适配，可以补充：低依赖部署、动态库裁剪、算子 fallback、设备能力探测、模型子图手工下沉等内容。</li>
+      </ul>
+    </article>
+  </main>
+</body>
+</html>
