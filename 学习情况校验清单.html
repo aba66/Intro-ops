@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>学习情况校验清单</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --paper: #ffffff;
+      --ink: #17202a;
+      --muted: #5e6a76;
+      --line: #d8dee6;
+      --accent: #0f766e;
+      --accent-dark: #07544e;
+      --accent-soft: #e4f3f1;
+      --blue: #175cd3;
+      --blue-soft: #e7efff;
+      --warn: #8a5a00;
+      --warn-soft: #fff3cf;
+      --good: #1f7a3f;
+      --good-soft: #e8f7ee;
+      --code: #edf2f7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.62;
+    }
+
+    header {
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 20px;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+      line-height: 1.28;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin: 34px 0 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    h4 {
+      font-size: 16px;
+      margin: 16px 0 6px;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: var(--code);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    ul,
+    ol {
+      margin: 8px 0;
+      padding-left: 22px;
+    }
+
+    li {
+      margin: 5px 0;
+    }
+
+    .lead {
+      max-width: 920px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .toc {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .toc a {
+      display: block;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfd;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      border-color: var(--accent);
+    }
+
+    .note {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      background: var(--paper);
+      margin: 14px 0;
+    }
+
+    .warning {
+      border-left-color: var(--warn);
+      background: var(--warn-soft);
+    }
+
+    .success {
+      border-left-color: var(--good);
+      background: var(--good-soft);
+    }
+
+    .stage {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin: 18px 0 26px;
+      overflow: hidden;
+    }
+
+    .stage-head {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 18px;
+      background: #fbfcfd;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .stage-meta {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stage-body {
+      padding: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #ffffff;
+    }
+
+    .card h4 {
+      margin-top: 0;
+    }
+
+    .task-list li,
+    .exit-list li {
+      list-style: none;
+      position: relative;
+    }
+
+    .task-list li::before {
+      content: "□";
+      position: absolute;
+      left: -22px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .exit-list li::before {
+      content: "✓";
+      position: absolute;
+      left: -22px;
+      color: var(--good);
+      font-weight: 800;
+    }
+
+    .lock {
+      color: var(--warn);
+      font-weight: 700;
+    }
+
+    .tag {
+      display: inline-block;
+      margin: 0 6px 6px 0;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: 13px;
+    }
+
+    .tag.blue {
+      background: var(--blue-soft);
+      color: #123f8c;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #eef2f6;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .boss {
+      border-left: 4px solid var(--blue);
+      background: #f8faff;
+    }
+
+    .tiny {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer {
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      margin-top: 32px;
+      padding-top: 18px;
+      font-size: 14px;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .toc {
+        display: none;
+      }
+
+      .stage,
+      .card,
+      .note,
+      table {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>学习情况校验清单</h1>
+      <p class="lead">
+        这份清单把项目学习拆成主线任务。每一阶段都有前置条件、必须产出、知识点验收和面试高频问题。
+        只有完成当前阶段的“通关标准”，再进入下一阶段。这样学出来的内容才能写进简历，也能在面试里讲清楚。
+      </p>
+      <nav class="toc" aria-label="目录">
+        <a href="#rules">通关规则</a>
+        <a href="#stage-0">0. 环境与项目地图</a>
+        <a href="#stage-1">1. Python 到 C ABI</a>
+        <a href="#stage-2">2. CUDA 基础算子</a>
+        <a href="#stage-3">3. Reduction 与 Softmax</a>
+        <a href="#stage-4">4. CUTLASS/CuTe Copy</a>
+        <a href="#stage-5">5. 测试与 Benchmark</a>
+        <a href="#stage-6">6. 新增 LLM 算子</a>
+        <a href="#stage-7">7. 简历与面试输出</a>
+        <a href="#questions">高频问题总表</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="rules">
+      <h2>通关规则</h2>
+      <div class="note">
+        <strong>每个阶段都必须留下可检查产出。</strong>
+        不要只说“我看懂了”。能跑命令、能指出代码文件、能解释设计取舍、能回答追问，才算通过。
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>规则</th>
+            <th>说明</th>
+            <th>不合格表现</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>先跑通，再优化</td>
+            <td>先保证 build/test/bench 可复现，再谈性能。</td>
+            <td>只会说用了 CUDA，但无法重新构建项目。</td>
+          </tr>
+          <tr>
+            <td>先讲链路，再讲细节</td>
+            <td>先能讲 Python API 到 kernel launch 的调用链，再深入某个 kernel。</td>
+            <td>能背 grid/block，但讲不清这个项目怎么调用 kernel。</td>
+          </tr>
+          <tr>
+            <td>每个结论要有证据</td>
+            <td>正确性来自 pytest，性能来自 benchmark，设计来自代码路径。</td>
+            <td>简历写“优化性能”，但没有数据、没有 baseline。</td>
+          </tr>
+          <tr>
+            <td>新增算子必须完整接入</td>
+            <td>一个算子不只是一段 CUDA kernel，还要有 C ABI、Python API、tests、bench、examples。</td>
+            <td>只写了 kernel 文件，不能被 Python 调用。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="stage" id="stage-0">
+      <div class="stage-head">
+        <div class="badge">0</div>
+        <div>
+          <h3>环境与项目地图</h3>
+          <p class="stage-meta">目标：知道项目怎么构建、怎么测试、每类文件负责什么。</p>
+        </div>
+      </div>
+      <div class="stage-body">
+        <p><span class="lock">前置条件：</span>能进入 conda 环境 <code>py312</code>，项目目录在 <code>/mnt/sde/UserData/chuansheng/tmp/Intro-ops</code>。</p>
+        <div class="grid">
+          <div class="card">
+            <h4>主线任务</h4>
+            <ul class="task-list">
+              <li>执行 <code>conda activate py312</code>。</li>
+              <li>执行 <code>bash scripts/build_nvidia.sh env</code>，记录 BUILD_DIR、CAMP_ENABLE_CUTE、CUTLASS_ROOT。</li>
+              <li>执行 <code>bash scripts/build_nvidia.sh build</code>，确认生成 <code>build-nvidia/ops/libcamp_ops.so</code>。</li>
+              <li>执行 <code>bash scripts/build_nvidia.sh test</code>，记录 pytest 和 run_ops 的通过情况。</li>
+              <li>画出项目目录地图：<code>include</code>、<code>ops</code>、<code>python</code>、<code>tests</code>、<code>scripts</code>、<code>third_party</code>。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>必须产出</h4>
+            <ul class="exit-list">
+              <li>一份环境记录：Python、CUDA、GCC、CMake、CUTLASS 路径。</li>
+              <li>一张项目结构图，标出每个目录的职责。</li>
+              <li>一次完整 build/test 日志摘要。</li>
+              <li>能说明 <code>libcamp_ops.so</code> 是什么、谁加载它、在哪里生成。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>要掌握</h4>
+            <span class="tag">Conda</span>
+            <span class="tag">CMake/Ninja</span>
+            <span class="tag">CUDA 11.8</span>
+            <span class="tag">动态库</span>
+            <ul>
+              <li>CMake configure、generate、build 的区别。</li>
+              <li>为什么项目有 <code>build-nvidia</code> 构建目录。</li>
+              <li>CUTLASS/CuTe 是第三方头文件依赖，不是 Python 包。</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note boss">
+          <strong>阶段面试高频：</strong>
+          这个项目如何构建？CUDA 编译器版本是什么？动态库在哪里生成？Python 为什么能找到这个动态库？
+        </div>
+        <div class="note success">
+          <strong>通关标准：</strong>
+          不看文档也能重新跑通 build/test，并能用 1 分钟讲清项目目录结构。
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="stage-1">
+      <div class="stage-head">
+        <div class="badge">1</div>
+        <div>
+          <h3>Python API 到 C ABI 调用链</h3>
+          <p class="stage-meta">目标：理解一个算子从 Python 调用到底层 C++ descriptor 的完整路径。</p>
+        </div>
+      </div>
+      <div class="stage-body">
+        <p><span class="lock">前置条件：</span>完成阶段 0；能定位 <code>python/operator_runtime</code> 和 <code>include/operator_runtime</code>。</p>
+        <div class="grid">
+          <div class="card">
+            <h4>主线任务</h4>
+            <ul class="task-list">
+              <li>选择 <code>vector_add</code>，从 <code>python/operator_runtime/ops/vector_add.py</code> 开始读。</li>
+              <li>追踪 <code>prepare_vector_add</code>、<code>bind_binary</code>、<code>_bind_lifecycle</code>、<code>build_prepared_op</code>。</li>
+              <li>读 <code>include/operator_runtime/ops/vector_add.h</code>，对照 C 函数签名。</li>
+              <li>读 <code>ops/vector_add/nvidia/vector_add_cuda.cu</code>，理解 descriptor 里保存了什么。</li>
+              <li>写一张调用链：Python API -> TensorView -> ctypes -> create descriptor -> execute -> CUDA launch。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>必须产出</h4>
+            <ul class="exit-list">
+              <li>一张 vector_add 端到端调用链图。</li>
+              <li>一张参数对照表：Python 参数、C ABI 参数、CUDA kernel 参数。</li>
+              <li>能指出 <code>argtypes</code> 和 C 函数签名必须一致的原因。</li>
+              <li>能解释 descriptor、workspace、stream_tensor、runner_args。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>要掌握</h4>
+            <span class="tag blue">ctypes</span>
+            <span class="tag blue">C ABI</span>
+            <span class="tag blue">Descriptor</span>
+            <span class="tag blue">TensorView</span>
+            <ul>
+              <li>C ABI 为什么适合做跨语言边界。</li>
+              <li>TensorView 中 data pointer、shape、stride、dtype 的意义。</li>
+              <li>descriptor 创建和 execute 执行为什么拆开。</li>
+              <li>workspace 查询为什么是运行时常见接口。</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note boss">
+          <strong>阶段面试高频：</strong>
+          为什么不用 Python 直接调用 CUDA？为什么要有 C ABI？descriptor 解决了什么问题？TensorView 和 PyTorch Tensor 是什么关系？
+        </div>
+        <div class="note success">
+          <strong>通关标准：</strong>
+          面试官让你讲 <code>vector_add(a, b)</code> 到 CUDA kernel 的全过程，你能不看代码讲出主路径，并能指出关键文件。
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="stage-2">
+      <div class="stage-head">
+        <div class="badge">2</div>
+        <div>
+          <h3>CUDA 基础算子：copy、vector_add、relu</h3>
+          <p class="stage-meta">目标：掌握 elementwise 类算子的线程映射、grid-stride loop 和 FP16/FP32 处理。</p>
+        </div>
+      </div>
+      <div class="stage-body">
+        <p><span class="lock">前置条件：</span>完成阶段 1；能解释 execute 的指针参数如何进入 CUDA launch。</p>
+        <div class="grid">
+          <div class="card">
+            <h4>主线任务</h4>
+            <ul class="task-list">
+              <li>读 <code>ops/vector_add/nvidia/kernel.cuh</code>，手写 grid-stride loop。</li>
+              <li>读 <code>ops/copy/nvidia/kernel.cuh</code> 和 <code>copy_cuda.cu</code>，理解 contiguous copy。</li>
+              <li>读 <code>ops/elementwise/relu/nvidia/relu_cuda.cu</code>，理解 elementwise 通用框架。</li>
+              <li>分别跑 <code>pytest tests/op_tests/test_vector_add.py -v --backend nvidia</code> 和 <code>pytest tests/op_tests/test_relu.py -v --backend nvidia</code>。</li>
+              <li>用小 shape 和大 shape 比较自定义算子与 PyTorch baseline 的耗时差异。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>必须产出</h4>
+            <ul class="exit-list">
+              <li>一段你自己写出的 grid-stride loop 解释。</li>
+              <li>一份 FP32/FP16 vector_add 正确性测试结果。</li>
+              <li>一份 copy/vector_add/relu benchmark 小表格。</li>
+              <li>能解释为什么小 shape 可能输给 PyTorch，大 shape 才更能看出带宽趋势。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>要掌握</h4>
+            <span class="tag">thread/block/grid</span>
+            <span class="tag">grid-stride loop</span>
+            <span class="tag">FP16</span>
+            <span class="tag">contiguous</span>
+            <ul>
+              <li><code>idx = blockIdx.x * blockDim.x + threadIdx.x</code> 的含义。</li>
+              <li><code>stride = blockDim.x * gridDim.x</code> 为什么能覆盖任意长度。</li>
+              <li>half 加法和 float 加法在 CUDA 中的不同写法。</li>
+              <li>contiguous tensor 为什么适合线性访问。</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note boss">
+          <strong>阶段面试高频：</strong>
+          什么是 grid-stride loop？如何避免越界？为什么 elementwise 算子通常是 memory-bound？FP16 算子实现需要注意什么？
+        </div>
+        <div class="note success">
+          <strong>通关标准：</strong>
+          能现场白板写出 vector_add kernel，并解释它如何适配 1024、1536、千万级元素。
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="stage-3">
+      <div class="stage-head">
+        <div class="badge">3</div>
+        <div>
+          <h3>Reduction 与 Softmax</h3>
+          <p class="stage-meta">目标：掌握 row-wise reduction、shared memory 规约和数值稳定 softmax。</p>
+        </div>
+      </div>
+      <div class="stage-body">
+        <p><span class="lock">前置条件：</span>完成阶段 2；能写出 elementwise kernel，并理解 block 内线程协作。</p>
+        <div class="grid">
+          <div class="card">
+            <h4>主线任务</h4>
+            <ul class="task-list">
+              <li>读 <code>ops/reduce_sum/nvidia/kernel.cuh</code>，画出一个 row 的规约过程。</li>
+              <li>读 <code>ops/softmax/nvidia/kernel.cuh</code>，拆成 row max、exp/sum、normalize 三步。</li>
+              <li>跑 <code>pytest tests/op_tests/test_reduce_sum.py -v --backend nvidia</code>。</li>
+              <li>跑 <code>pytest tests/op_tests/test_softmax.py -v --backend nvidia</code>。</li>
+              <li>故意去掉 softmax 的减 max，构造大值输入，观察 overflow 或错误趋势，再恢复。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>必须产出</h4>
+            <ul class="exit-list">
+              <li>一张 shared memory reduction 流程图。</li>
+              <li>一段 softmax 数值稳定性的解释，包含公式。</li>
+              <li>reduce_sum/softmax correctness 测试结果。</li>
+              <li>不同 rows/cols 下的 benchmark 表格。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>要掌握</h4>
+            <span class="tag">shared memory</span>
+            <span class="tag">__syncthreads</span>
+            <span class="tag">tree reduction</span>
+            <span class="tag">softmax</span>
+            <ul>
+              <li>为什么一行一个 block 是简单可靠的 row-wise 实现。</li>
+              <li>shared memory 规约为什么每轮 stride 减半。</li>
+              <li><code>__syncthreads()</code> 的必要性。</li>
+              <li>softmax 减 max 不改变数学结果，但能提升数值稳定性。</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note boss">
+          <strong>阶段面试高频：</strong>
+          reduce_sum 如何做并行规约？shared memory 有什么作用？softmax 为什么要减最大值？如果 cols 大于 blockDim 怎么处理？
+        </div>
+        <div class="note success">
+          <strong>通关标准：</strong>
+          能讲清 softmax kernel 的三次数据遍历，每次遍历在做什么，以及为什么需要两次规约。
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="stage-4">
+      <div class="stage-head">
+        <div class="badge">4</div>
+        <div>
+          <h3>CUTLASS/CuTe Copy 与向量化访存</h3>
+          <p class="stage-meta">目标：理解 CuTe 的 tensor/layout/tile/partition，以及向量化 copy 的边界和对齐。</p>
+        </div>
+      </div>
+      <div class="stage-body">
+        <p><span class="lock">前置条件：</span>完成阶段 2；能解释普通 copy kernel 的线性访问方式。</p>
+        <div class="grid">
+          <div class="card">
+            <h4>主线任务</h4>
+            <ul class="task-list">
+              <li>读 <code>ops/copy/nvidia/cute_copy.cuh</code>。</li>
+              <li>读 CUTLASS 示例 <code>third_party/cutlass/examples/cute/tutorial/tiled_copy.cu</code>。</li>
+              <li>对照普通 copy 和 CuTe copy，列出两者在线程映射、访存宽度、边界处理上的区别。</li>
+              <li>理解对齐判断：为什么 16-byte aligned 才走向量化路径。</li>
+              <li>跑 copy benchmark，记录不同 shape/dtype 下 runtime 和 PyTorch baseline。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>必须产出</h4>
+            <ul class="exit-list">
+              <li>一张 CuTe copy 的 tile/partition 草图。</li>
+              <li>一段解释：为什么向量化访问需要对齐，尾部元素如何避免越界。</li>
+              <li>一份普通 copy 与 CuTe copy 的对比笔记。</li>
+              <li>能复述一次 CUTLASS/CuTe 版本兼容问题如何定位和修复。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>要掌握</h4>
+            <span class="tag blue">CUTLASS</span>
+            <span class="tag blue">CuTe</span>
+            <span class="tag blue">vectorized load/store</span>
+            <span class="tag blue">predicate</span>
+            <ul>
+              <li>CuTe tensor、layout、shape 的基本含义。</li>
+              <li>local_tile 和 thread partition 的作用。</li>
+              <li>为什么尾部坐标需要 predicate 判断。</li>
+              <li>版本兼容问题通常从编译错误、示例代码、头文件 API 三处定位。</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note boss">
+          <strong>阶段面试高频：</strong>
+          CUTLASS 和 CuTe 分别是什么？向量化 copy 为什么可能更快？指针对齐不满足怎么办？如何处理 n 不是 tile 整数倍？
+        </div>
+        <div class="note success">
+          <strong>通关标准：</strong>
+          能把 CuTe copy 讲成“线程到数据映射”的问题，而不是只说“用了 CUTLASS”。
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="stage-5">
+      <div class="stage-head">
+        <div class="badge">5</div>
+        <div>
+          <h3>测试、Benchmark 与性能解释</h3>
+          <p class="stage-meta">目标：知道如何证明算子正确、如何测性能、如何解释结果。</p>
+        </div>
+      </div>
+      <div class="stage-body">
+        <p><span class="lock">前置条件：</span>完成阶段 2 和 3；至少有一个 elementwise 和一个 reduction 算子能跑通。</p>
+        <div class="grid">
+          <div class="card">
+            <h4>主线任务</h4>
+            <ul class="task-list">
+              <li>读 <code>tests/op_tests</code>，区分 correctness test 和 API contract test。</li>
+              <li>读 <code>tests/bench</code> 和 <code>python/operator_runtime_testing/benchmark.py</code>。</li>
+              <li>新增一个 correctness case，例如更大的 shape 或特殊边界 shape。</li>
+              <li>新增一个 benchmark case，并记录 runtime_ms、torch_ms、speedup。</li>
+              <li>写一份性能解释：哪些算子是 memory-bound，哪些受 launch overhead 影响明显。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>必须产出</h4>
+            <ul class="exit-list">
+              <li>一张测试矩阵：算子、dtype、shape、期望行为。</li>
+              <li>一张 benchmark 结果表，至少包含 3 个 shape。</li>
+              <li>一段 benchmark 方法说明：warmup、iterations、trials、CUDA synchronize。</li>
+              <li>能解释为什么 benchmark 不能只跑一次。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>要掌握</h4>
+            <span class="tag">pytest</span>
+            <span class="tag">API contract</span>
+            <span class="tag">CUDA event</span>
+            <span class="tag">profiler</span>
+            <ul>
+              <li>correctness test 验证数值正确。</li>
+              <li>API contract test 验证错误输入被拒绝。</li>
+              <li>benchmark 要考虑 warmup、同步和多次采样。</li>
+              <li>speedup 低不等于项目失败，要能解释瓶颈。</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note boss">
+          <strong>阶段面试高频：</strong>
+          你怎么证明这个算子是对的？benchmark 怎么避免异步执行导致计时错误？为什么你的 kernel 有时比 PyTorch 慢？
+        </div>
+        <div class="note success">
+          <strong>通关标准：</strong>
+          能拿着一张 benchmark 表讲清楚性能趋势，并能说明下一步优化方向。
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="stage-6">
+      <div class="stage-head">
+        <div class="badge">6</div>
+        <div>
+          <h3>新增 LLM/端侧部署相关算子</h3>
+          <p class="stage-meta">目标：从“完成 TODO”升级为“具备新增算子的完整工程能力”。</p>
+        </div>
+      </div>
+      <div class="stage-body">
+        <p><span class="lock">前置条件：</span>完成阶段 1 到 5；知道一个算子从 API 到 benchmark 的全链路。</p>
+        <div class="note warning">
+          <strong>推荐顺序：</strong>
+          先做 RMSNorm 或 RoPE，再做 Quantize/Dequantize 或 GEMV。RMSNorm/RoPE 更贴近 LLM 推理，复杂度适中，面试价值高。
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>候选算子</th>
+              <th>为什么值得做</th>
+              <th>核心知识点</th>
+              <th>最低验收标准</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>RMSNorm</td>
+              <td>LLM 中常见，和 reduction、elementwise 都有关。</td>
+              <td>平方和规约、rsqrt、epsilon、FP32 accumulate、FP16 output。</td>
+              <td>支持 2D row-wise，和 PyTorch 参考实现误差对齐，有 benchmark。</td>
+            </tr>
+            <tr>
+              <td>RoPE</td>
+              <td>大模型位置编码常见，端侧推理也会遇到。</td>
+              <td>偶奇维旋转、sin/cos cache、shape layout、batch/head/seq 维度。</td>
+              <td>支持常见 layout，和 PyTorch 参考实现对齐。</td>
+            </tr>
+            <tr>
+              <td>Quantize/Dequantize</td>
+              <td>端侧部署高频，能体现低比特推理理解。</td>
+              <td>scale/zero_point、per-tensor/per-channel、round、saturate、误差。</td>
+              <td>支持 FP16/FP32 到 INT8 或 INT8 到 FP16/FP32，输出误差可解释。</td>
+            </tr>
+            <tr>
+              <td>GEMV</td>
+              <td>推理中 batch 小时常见，和带宽、访存布局相关。</td>
+              <td>矩阵向量乘、shared memory、warp reduction、内存访问合并。</td>
+              <td>支持 MxK @ K，和 PyTorch matmul 对齐，有不同 M/K benchmark。</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="grid">
+          <div class="card">
+            <h4>新增算子主线任务</h4>
+            <ul class="task-list">
+              <li>新增 <code>include/operator_runtime/ops/&lt;op&gt;.h</code>。</li>
+              <li>新增 <code>python/operator_runtime/ops/&lt;op&gt;.py</code>。</li>
+              <li>新增 <code>ops/&lt;op&gt;/nvidia/&lt;op&gt;_cuda.cu</code> 和 kernel。</li>
+              <li>新增 <code>tests/cases/&lt;op&gt;.py</code>、<code>tests/op_tests/test_&lt;op&gt;.py</code>。</li>
+              <li>新增 <code>tests/bench/&lt;op&gt;.py</code> 和 example。</li>
+              <li>跑全量 <code>bash scripts/build_nvidia.sh test</code>。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>必须产出</h4>
+            <ul class="exit-list">
+              <li>一个完整接入的新算子，而不是孤立 kernel。</li>
+              <li>一页设计说明：输入输出、dtype、shape 限制、workspace、kernel 映射。</li>
+              <li>一份测试结果和 benchmark 表。</li>
+              <li>一段可写进简历的项目 bullet。</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note boss">
+          <strong>阶段面试高频：</strong>
+          你新增一个算子的完整流程是什么？RMSNorm 和 LayerNorm 有什么区别？量化误差怎么解释？端侧部署为什么关注 INT8/FP16？
+        </div>
+        <div class="note success">
+          <strong>通关标准：</strong>
+          能新增一个岗位相关算子，并从接口、kernel、测试、性能四个角度完整复盘。
+        </div>
+      </div>
+    </section>
+
+    <section class="stage" id="stage-7">
+      <div class="stage-head">
+        <div class="badge">7</div>
+        <div>
+          <h3>简历与面试输出</h3>
+          <p class="stage-meta">目标：把学习成果转成可信项目经历，而不是术语堆叠。</p>
+        </div>
+      </div>
+      <div class="stage-body">
+        <p><span class="lock">前置条件：</span>至少完成阶段 0 到 5；如果要冲更强简历，完成阶段 6。</p>
+        <div class="grid">
+          <div class="card">
+            <h4>主线任务</h4>
+            <ul class="task-list">
+              <li>更新 <code>端侧部署简历.md/html</code> 和 <code>ai infra 简历.md/html</code>。</li>
+              <li>每个 bullet 后面写上对应代码文件路径，作为自己的面试备忘。</li>
+              <li>准备 30 秒、2 分钟、5 分钟三个版本的项目介绍。</li>
+              <li>准备 3 个踩坑案例：构建问题、kernel bug、benchmark 问题。</li>
+              <li>准备 3 个性能数据：一个快于 baseline，一个慢于 baseline，一个解释 launch overhead。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>必须产出</h4>
+            <ul class="exit-list">
+              <li>两版简历项目描述：AI Infra 版和端侧部署版。</li>
+              <li>一份面试问答清单。</li>
+              <li>一份项目复盘：背景、架构、实现、验证、问题、优化。</li>
+              <li>能根据岗位 JD 临场调整讲述重点。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>要掌握</h4>
+            <span class="tag blue">项目表达</span>
+            <span class="tag blue">技术复盘</span>
+            <span class="tag blue">岗位匹配</span>
+            <ul>
+              <li>AI Infra 重点讲运行时抽象、C ABI、测试和 benchmark。</li>
+              <li>端侧部署重点讲低依赖、稳定 ABI、算子覆盖、FP16/INT8、性能和动态库。</li>
+              <li>不要夸大“精通”，用具体事实替代空泛形容词。</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note boss">
+          <strong>阶段面试高频：</strong>
+          这个项目和普通 CUDA demo 有什么区别？你最难的 bug 是什么？如果继续优化你会做什么？这个项目和端侧部署有什么关系？
+        </div>
+        <div class="note success">
+          <strong>最终通关标准：</strong>
+          面试官追问任意简历 bullet，你都能指出代码、解释设计、展示验证结果，并说出下一步优化。
+        </div>
+      </div>
+    </section>
+
+    <section id="questions">
+      <h2>面试高频问题总表</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>模块</th>
+            <th>高频问题</th>
+            <th>回答要点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>运行时架构</td>
+            <td>这个项目的调用链是什么？</td>
+            <td>Python API 做检查和 TensorView；ctypes 绑定 C ABI；C++ descriptor 保存元信息；execute 传指针和 stream；CUDA kernel 执行。</td>
+          </tr>
+          <tr>
+            <td>C ABI</td>
+            <td>为什么要用 C ABI，而不是直接 Python 调 CUDA？</td>
+            <td>C ABI 稳定、跨语言、适合动态库和多后端；Python 只负责调度，不拷贝数据。</td>
+          </tr>
+          <tr>
+            <td>TensorView</td>
+            <td>TensorView 里为什么要保存 shape 和 stride？</td>
+            <td>shape 用于维度和元素数判断；stride 用于判断 contiguous 或未来支持非连续访问。</td>
+          </tr>
+          <tr>
+            <td>CUDA</td>
+            <td>grid-stride loop 有什么好处？</td>
+            <td>同一个 kernel 适配任意 n；线程数不必等于元素数；可以覆盖大输入。</td>
+          </tr>
+          <tr>
+            <td>Reduction</td>
+            <td>shared memory reduction 怎么保证正确？</td>
+            <td>每个线程先算局部和，写 shared memory；每轮 stride 减半规约；每轮后同步；thread 0 写结果。</td>
+          </tr>
+          <tr>
+            <td>Softmax</td>
+            <td>softmax 为什么要做数值稳定处理？</td>
+            <td>减 row max 不改变结果，但避免 exp overflow；流程是 max、exp/sum、normalize。</td>
+          </tr>
+          <tr>
+            <td>CUTLASS/CuTe</td>
+            <td>你用了 CUTLASS/CuTe 做什么？</td>
+            <td>用于 copy 的向量化 tile copy；重点是线程到数据映射、对齐访问和尾部 predicate。</td>
+          </tr>
+          <tr>
+            <td>Benchmark</td>
+            <td>为什么你的 kernel 有时比 PyTorch 慢？</td>
+            <td>PyTorch 算子高度优化；小 shape 受 launch overhead 影响；naive kernel 可能访存和并行度不够好，benchmark 用来定位瓶颈。</td>
+          </tr>
+          <tr>
+            <td>端侧部署</td>
+            <td>这个项目和模型端侧部署有什么关系？</td>
+            <td>稳定 ABI、动态库加载、低层算子执行、显式内存/stream 管理是部署 runtime 的基础；下一步可扩展量化、fallback、设备能力探测。</td>
+          </tr>
+          <tr>
+            <td>新增算子</td>
+            <td>你新增一个算子的流程是什么？</td>
+            <td>定义 C ABI、Python API、descriptor、kernel、tests、bench、examples；最后全量验证和性能复盘。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>最快学习路径</h2>
+      <div class="note">
+        如果时间有限，按下面顺序推进：
+        <ol>
+          <li>2 天：完成阶段 0 和 1，能讲清项目链路。</li>
+          <li>3 天：完成阶段 2 和 3，掌握基础 CUDA 算子。</li>
+          <li>1 天：完成阶段 5，整理 benchmark 表和性能解释。</li>
+          <li>3 到 5 天：完成阶段 6，新增 RMSNorm 或 RoPE。</li>
+          <li>1 天：完成阶段 7，打磨简历和面试讲述。</li>
+        </ol>
+      </div>
+    </section>
+
+    <footer>
+      <p>使用方式：每完成一个阶段，就把“必须产出”保存到项目笔记里。没有产出的学习很容易变成幻觉，能复现和能讲清楚才是通关。</p>
+    </footer>
+  </main>
+</body>
+</html>
